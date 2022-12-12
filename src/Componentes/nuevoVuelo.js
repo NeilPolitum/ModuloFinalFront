@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import '../Estilos/App.css';
-// import axios from 'axios';
+import moment from 'moment/moment';
 
 export default function NuevoVuelo() {
   const baseURLAerolinea = "http://localhost:8089/airline/"
@@ -10,13 +11,15 @@ export default function NuevoVuelo() {
   const baseURL= 'http://localhost:8089/transactional/createFlight/';
 
   var labelsAero = []
+  const currentTimeDate = new Date();
+  const timeWithFormat = moment(currentTimeDate).format("YYYY-MM-DD hh:mm:ss")
   const [codeAero, setCodeAero] = useState([])
   const [datos, setDatos] = useState({
     airlineCode: '',
     flightNumber: '',
     airports: codeAero,
     pilotId: '',
-    flightTime: '',
+    flightTime: timeWithFormat,
   })
   const [segmentos, setSegmentos] = useState(1)
   const [aerolineas, setAerolineas] = useState([])
@@ -57,6 +60,7 @@ export default function NuevoVuelo() {
     console.log("datos",datos)
     event.preventDefault();
     axios.post(baseURL,datos);
+    toast("Registro completado")
   }  
   
   function crearAeropuertos() {
@@ -108,7 +112,7 @@ export default function NuevoVuelo() {
         </div>
         <div className='espacio'>
           <label for="name">Piloto:</label>
-          <select name="piloto" className='input'onChange={handleDatos}>
+          <select name="pilotId" className='input'onChange={handleDatos}>
             <option default>seleccione</option>
             {pilotos.map((piloto, key) => (
               <option value={piloto.code} key={key}>{piloto.name}</option>
