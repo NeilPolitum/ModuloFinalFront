@@ -4,12 +4,12 @@ import '../Estilos/App.css';
 // import axios from 'axios';
 
 export default function NuevoVuelo() {
-  // const baseURLAerolinea = "http://localhost:3080/empleado/consultar/"
-  // const baseURLAeropuerto = "http://localhost:3080/empleado/consultar/"
-  // const baseURLPiloto = "http://localhost:3080/empleado/consultar/"
+  const baseURLAerolinea = "http://localhost:8089/airline/"
+  const baseURLAeropuerto = "http://localhost:8089/airport/"
+  const baseURLPiloto = "http://localhost:8089/pilot/"
+  const baseURL= 'http://localhost:8089/transactional/createFlight/';
 
   var labelsAero = []
-  const baseURL= 'http://localhost:8089/transactional/createFlight/';
   const [codeAero, setCodeAero] = useState([])
   const [datos, setDatos] = useState({
     airlineCode: '',
@@ -19,108 +19,24 @@ export default function NuevoVuelo() {
     flightTime: '',
   })
   const [segmentos, setSegmentos] = useState(1)
-  console.log("segmento",segmentos)
+  const [aerolineas, setAerolineas] = useState([])
+  const [pilotos, setPilotos] = useState([])
+  const [aeropuertos, setAeropuertos] = useState([])
 
-  const [aerolineas, setAerolineas] = useState([
-    {
-      code: "W3",
-      name: "latam"
-    },
-    {
-      code: "W4",
-      name: "vivaair"
-    },
-    {
-      code: "W5",
-      name: "lufthansa"
-    }
-  ])
-  const [pilotos, setPilotos] = useState([
-    {
-      licence: "",
-      airline: {
-        code: "W3",
-        name: "latam"
-      },
-      name: "Daniel Rubiano",
-      expiration: "2025-12-31 09:07:46"
-    },
-    {
-      licence: "",
-      airline: {
-        code: "W3",
-        name: "latam"
-      },
-      name: "Daniel Rubiano 2",
-      expiration: "2025-12-31 09:07:46"
-    },
-    {
-      licence: "",
-      airline: {
-        code: "W4",
-        name: "vivaair"
-      },
-      name: "Daniel Rubiano 3",
-      expiration: "2025-12-31 09:07:46"
-    },
-    {
-      licence: "",
-      airline: {
-        code: "W5",
-        name: "lufthansa"
-      },
-      name: "Daniel Rubiano 4",
-      expiration: "2025-12-31 09:07:46"
-    },
-  ])
-  const [aeropuertos, setAeropuertos] = useState([
-    {
-      code: "AID",
-      name: "Internacional el dorado",
-      place: {
-        code: "BOG",
-        name: "Bogotá",
-        type: "Ciudad"
-      }
-    },
-    {
-      code: "AIM",
-      name: "Internacional Medellin",
-      place: {
-        code: "MED",
-        name: "Medellin",
-        type: "Ciudad"
-      }
-    },
-    {
-      code: "AIM",
-      name: "Internacional Madrid",
-      place: {
-        code: "MAD",
-        name: "Madrid",
-        type: "Ciudad"
-      }
-    },
-  ])
+  useEffect(() => {
+    axios.get(baseURLAerolinea).then((r) => {
+      setAerolineas(r.data);
+    })
+    axios.get(baseURLAeropuerto).then((r) => {
+      setAeropuertos(r.data)
+    })
+  }, [aerolineas, aeropuertos])
 
-  // useEffect(() => {
-  //   axios.get(baseURLAerolinea).then((r) => {
-  //     setAerolineas(r.data);
-  //   })
-  //   axios.get(baseURLAeropuerto).then((r) => {
-  //     setAeropuertos(r.data)
-  //   })
-  // }, [aerolineas, aeropuertos])
-
-  // useEffect(() => {
-  //   axios.get(baseURLPiloto+datos.aerolinea).then((r) => {
-  //     setPilotos(r.data)
-  //   })
-  // }, [pilotos, datos.aerolinea])
-
-  /* useEffect(() => {
-    crearAeropuertos()
-  }, [segmentos]) */
+  useEffect(() => {
+    axios.get(baseURLPiloto+datos.aerolinea).then((r) => {
+      setPilotos(r.data)
+    })
+  }, [pilotos, datos.aerolinea])
 
   const handleDatos = (event) => {
     setDatos({
@@ -133,6 +49,9 @@ export default function NuevoVuelo() {
     setSegmentos(event.target.value);
   }
   
+  const handleCodigosA = (event) => {
+    setCodeAero([...codeAero, event.target.value])
+  }
 
   const enviarDatos = (event) => {
     event.preventDefault();
@@ -145,7 +64,7 @@ export default function NuevoVuelo() {
       labelsAero.push(
         <div className='espacio'>
           <label for="name">{`Aeropuerto #${i+1}:`}</label>
-          <select name={"aeropuerto"+i} className='input'onChange={handleDatos}>
+          <select name={"aeropuerto"+i} className='input'onChange={handleCodigosA}>
             <option default>seleccione</option>
             {aeropuertos.map((aeropuerto, key) => (
               <option value={aeropuerto.code} key={key}>{aeropuerto.name}</option>
@@ -157,6 +76,8 @@ export default function NuevoVuelo() {
   }
 
   crearAeropuertos();
+  
+  console.log("codAero",codeAero)
 
   return (
     <form onSubmit={enviarDatos}>
