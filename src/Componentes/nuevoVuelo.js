@@ -16,7 +16,8 @@ export default function NuevoVuelo() {
     pilotId: '',
     flightTime: '',
   })
-  const [segmentos, setSegmentos] = useState(2)
+  const [segmentos, setSegmentos] = useState(1)
+  console.log("segmento",segmentos)
 
   const [aerolineas, setAerolineas] = useState([
     {
@@ -115,9 +116,9 @@ export default function NuevoVuelo() {
   //   })
   // }, [pilotos, datos.aerolinea])
 
-  useEffect(() => {
+  /* useEffect(() => {
     crearAeropuertos()
-  }, [segmentos])
+  }, [segmentos]) */
 
   const handleDatos = (event) => {
     setDatos({
@@ -127,11 +128,7 @@ export default function NuevoVuelo() {
   }
 
   const handleSegments = (event) => {
-    setSegmentos({
-      ...segmentos,
-      [event.target.name]:parseInt(event.target.value)
-    })
-    console.log("segmento",segmentos)
+    setSegmentos(event.target.value);
   }
   
 
@@ -140,11 +137,12 @@ export default function NuevoVuelo() {
   }  
   
   function crearAeropuertos() {
-    for(let i=0; i<segmentos; i++){
+    labelsAero=[];
+    for(let i=0; i<=segmentos; i++){
       labelsAero.push(
         <div className='espacio'>
           <label for="name">Aeropuerto:</label>
-          <select name="aeropuerto" className='input'onChange={handleDatos}>
+          <select name={"aeropuerto"+i} className='input'onChange={handleDatos}>
             <option default>seleccione</option>
             {aeropuertos.map((aeropuerto, key) => (
               <option value={aeropuerto.code} key={key}>{aeropuerto.name}</option>
@@ -154,6 +152,8 @@ export default function NuevoVuelo() {
       )
     }
   }
+
+  crearAeropuertos();
 
   return (
     <form onSubmit={enviarDatos}>
@@ -175,14 +175,15 @@ export default function NuevoVuelo() {
         <div className='espacio'>
           <label for="name">Segmentos:</label>
           <select name="segmentos" className='input'onChange={handleSegments}>
-            <option default>seleccione</option>
-            <option value={1}>1</option>
+            <option value={1} default>1</option>
             <option value={2}>2</option>
             <option value={3}>3</option>
           </select>
           <button onClick={((event)=>crearAeropuertos())}>Nuevo Vuelo</button>
         </div>
+        <div className='espacioLabels'>
         {labelsAero}
+        </div>
         <div className='espacio'>
           <label for="name">Piloto:</label>
           <select name="piloto" className='input'onChange={handleDatos}>
