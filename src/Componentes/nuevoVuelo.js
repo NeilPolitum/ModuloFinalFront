@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import '../Estilos/App.css';
 // import axios from 'axios';
@@ -8,6 +9,7 @@ export default function NuevoVuelo() {
   // const baseURLPiloto = "http://localhost:3080/empleado/consultar/"
 
   var labelsAero = []
+  const baseURL= 'http://localhost:8089/transactional/createFlight/';
   const [codeAero, setCodeAero] = useState([])
   const [datos, setDatos] = useState({
     airlineCode: '',
@@ -134,6 +136,7 @@ export default function NuevoVuelo() {
 
   const enviarDatos = (event) => {
     event.preventDefault();
+    axios.post(baseURL,datos);
   }  
   
   function crearAeropuertos() {
@@ -179,7 +182,6 @@ export default function NuevoVuelo() {
             <option value={2}>2</option>
             <option value={3}>3</option>
           </select>
-          <button onClick={((event)=>crearAeropuertos())}>Nuevo Vuelo</button>
         </div>
         <div className='espacioLabels'>
         {labelsAero}
