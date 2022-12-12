@@ -141,7 +141,7 @@ export default function NuevoVuelo() {
     for(let i=0; i<=segmentos; i++){
       labelsAero.push(
         <div className='espacio'>
-          <label for="name">Aeropuerto:</label>
+          <label for="name">{`Aeropuerto #${i+1}:`}</label>
           <select name={"aeropuerto"+i} className='input'onChange={handleDatos}>
             <option default>seleccione</option>
             {aeropuertos.map((aeropuerto, key) => (
