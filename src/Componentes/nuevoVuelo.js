@@ -25,18 +25,18 @@ export default function NuevoVuelo() {
 
   useEffect(() => {
     axios.get(baseURLAerolinea).then((r) => {
-      setAerolineas(r.data);
+      setAerolineas(r.data.data);
     })
     axios.get(baseURLAeropuerto).then((r) => {
-      setAeropuertos(r.data)
+      setAeropuertos(r.data.data)
     })
   }, [aerolineas, aeropuertos])
 
   useEffect(() => {
-    axios.get(baseURLPiloto+datos.aerolinea).then((r) => {
-      setPilotos(r.data)
+    axios.get(baseURLPiloto+datos.airlineCode).then((r) => {
+      setPilotos(r.data.data)
     })
-  }, [pilotos, datos.aerolinea])
+  }, [pilotos, datos.airlineCode])
 
   const handleDatos = (event) => {
     setDatos({
@@ -48,12 +48,13 @@ export default function NuevoVuelo() {
   const handleSegments = (event) => {
     setSegmentos(event.target.value);
   }
-  
+
   const handleCodigosA = (event) => {
     setCodeAero([...codeAero, event.target.value])
   }
 
   const enviarDatos = (event) => {
+    console.log("datos",datos)
     event.preventDefault();
     axios.post(baseURL,datos);
   }  
@@ -76,8 +77,6 @@ export default function NuevoVuelo() {
   }
 
   crearAeropuertos();
-  
-  console.log("codAero",codeAero)
 
   return (
     <form onSubmit={enviarDatos}>
@@ -94,7 +93,7 @@ export default function NuevoVuelo() {
         </div>
         <div className='espacio'>
           <label for="name">Vuelo:</label>
-          <input type="text" onChange={handleDatos} name="noVuelo" className='input' disabled defaultValue={1}/>
+          <input type="text" onChange={handleDatos} name="flightNumber" className='input' disabled defaultValue={1}/>
         </div>
         <div className='espacio'>
           <label for="name">Segmentos:</label>
